@@ -1,0 +1,23 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+flask = "*"
+flask-jwt-extended = "*"
+flask-rest = "*"
+marshmallow = "==3.0.0rc1"
+flask-marshmallow = "*"
+flask-sqlalchemy = "*"
+flask-restful = "*"
+dateutil = "*"
+python-dateutil = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases=true

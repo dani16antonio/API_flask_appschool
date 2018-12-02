@@ -1,33 +1,34 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from flask_jwt import jwt_required
 from models.studentModel import StudentModel
+from marshmallow import ValidationError
+from flask import request
+from schemas.student import StudentSchema
+
+student_schema=StudentSchema()
 class Student(Resource):
-    parser=reqparse.RequestParser()
 
-    #set get lastname
-    parser.add_argument('lastname',
-                        type=str,
-                        required=True,
-                        help="can't be blank")
-    #set get age
-    parser.add_argument('age',
-                        type=str,
-                        required=True,
-                        help="can't be blank")
+    #@jwt_required
+    def get(self):
+        try:
+            data=student_schema.load(request.get_json())
+        except ValidationError as err:
+            return err.messages,401
+        student=StudentModel.find_by_document(data['doc'])
+        return student_schema.dump(student)
 
-    @jwt_required()
-    def get(self,name):
-        student=StudentModel.find_by_name(name)
-        return student.json()
-
-    @jwt_required()
-    def post(self,name):
-        if StudentModel.find_by_name(name):
+    #@jwt_required
+    def post(self):
+        try:
+            data=student_schema.load(request.get_json())
+        except ValidationError as err:
+            return err.messages,401
+        if StudentModel.find_by_document(data['doc']):
             return{'message':'Student already exists.'},400
-        data=Student.parser.parse_args()
-        student=StudentModel(name,data['lastname'],data['age'])
+        #student=StudentModel(data['doc'], data['name'], data['lastname'], data['gender'], data['birthday'])
+        student = StudentModel(**data)
         try:
             student.insert_into_database()
-        except Exception as e:
+        except:
             return{'message':'Internal server error.'},500
-        return student.json(),201
+        return student_schema.dump(student),201
