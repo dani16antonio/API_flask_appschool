@@ -3,14 +3,11 @@ from db import db
 class UserModel(db.Model):
     __tablename__='user'
     id=db.Column(db.Integer, autoincrement=True,primary_key=True)
-    username=db.Column(db.String(20))
-    password=db.Column(db.String(20))
-    email=db.Column(db.String(20))
-    def __init__(self,username,password,email):
-        self.id=0
-        self.username=username
-        self.password=password
-        self.email=email
+    username=db.Column(db.String(20), nullable=False, unique=True)
+    password=db.Column(db.String(20), nullable=False)
+    email=db.Column(db.String(40), nullable=False,unique=True)
+    userType=db.Column(db.String(14), nullable=False)#Estudiante, Administrativo, profesor, superSu.
+
     def insert_into_database(self):
         db.session.add(self)
         db.session.commit()

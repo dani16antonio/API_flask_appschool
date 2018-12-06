@@ -1,7 +1,8 @@
-from marshmallow import Schema,fields
+from ma import ma
+from models.userModel import UserModel
 
-class UserSchema(Schema):
-    username=fields.Str(required=True)
-    password=fields.Str(required=True)
-    email=fields.Str()
-    id=fields.Int()
+class UserSchema(ma.ModelSchema):
+    class Meta:
+        model=UserModel
+        load_only=("password","id")#a list or tuple of fields to skip during serialization, we don't send this value
+        dump_only=("id",)#a list or tuple of fields to skip during deserialization, read-only fields, we don't receive this value, we generate it automatically

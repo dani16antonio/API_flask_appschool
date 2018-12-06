@@ -1,8 +1,8 @@
-from marshmallow import Schema,fields
-
-class StudentSchema(Schema):
-    name=fields.Str(required=True)
-    lastname=fields.Str(required=True)
-    gender=fields.Str(required=True)
-    id=fields.Int()
-    doc=fields.Str(required=True)
+from marshmallow import Schema, fields
+from models.userModel import  UserModel
+from ma import ma
+from models.studentModel import StudentModel
+class StudentSchema(ma.ModelSchema):
+    class Meta:
+        model=StudentModel
+        dump_only=("id",)
